@@ -6,15 +6,27 @@
 /*   By: tdausque <tdausque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 15:24:15 by tdausque          #+#    #+#             */
-/*   Updated: 2024/10/31 13:15:12 by tdausque         ###   ########.fr       */
+/*   Updated: 2024/11/12 13:26:24 by tdausque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	if (!s)
+		return (0);
+	while (s[i] != '\0')
+		i++;
+	return (i);
+}
+
 char	*ft_strchr(const char *s, int c)
 {
-	while (*s != (unsigned char)c && *s != '\0')
+	while (s && *s != (unsigned char)c && *s != '\0')
 		s++;
 	if (*s == (unsigned char)c)
 		return ((char *)s);
@@ -46,20 +58,7 @@ char	*ft_strdup(char *src)
 	return (dest);
 }
 
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (*s != '\0')
-	{
-		s++;
-		i++;
-	}
-	return (i);
-}
-
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	int		i;
 	char	*str;
@@ -83,6 +82,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		i++;
 	}
 	str[ft_strlen(s1) + i] = '\0';
+	free(s1);
+	s1 = NULL;
 	return (str);
 }
 
