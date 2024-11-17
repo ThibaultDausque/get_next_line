@@ -6,7 +6,7 @@
 /*   By: thibault <thibault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 12:41:21 by thibault          #+#    #+#             */
-/*   Updated: 2024/11/15 12:46:02 by thibault         ###   ########.fr       */
+/*   Updated: 2024/11/17 18:15:52 by thibault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,27 +18,26 @@ char	*fill_stash(int fd, char *buff, char *stash)
 	int		b_reads;
 
 	b_reads = 1;
-	while (b_reads != 0)
+	while(b_reads != 0)
 	{
 		b_reads = read(fd, buff, BUFFER_SIZE);
 		if (b_reads < 0)
 		{
-			free(buff);
-			buff = NULL;
-			return (stash);
+			free(buff); 
+			return (NULL);
+		}
+		if (b_reads == 0)
+		{
+			if (stash[b_reads] == 0)
+				return (NULL);
+			break ;
 		}
 		buff[b_reads] = 0;
 		stash = ft_strjoin(stash, buff);
-		if (!stash)
-		{
-			free(buff);
-			return (NULL);
-		}
 		if (ft_strchr(buff, '\n'))
 			break ;
 	}
 	free(buff);
-	buff = NULL;
 	return (stash);
 }
 
@@ -48,18 +47,13 @@ char	*extract_line(char *line)
 	char	*tmp;
 
 	i = 0;
-	while (line[i] != '\n' && line[i] != '\0')
+	while (line[i] != '\0' && line[i] != '\n')
 		i++;
-	if (line[i] == '\0' || line[0] == '\0')
-	{
-		free(line);
-		return (0);
-	}
 	tmp = ft_substr(line, i + 1, ft_strlen(line));
 	if (!tmp)
 	{
 		free(line);
-		return (0);
+		return (NULL);
 	}
 	line[i + 1] = 0;
 	return (tmp);
@@ -76,6 +70,8 @@ char	*get_next_line(int fd)
 	if (stash == NULL)
 	{
 		stash = malloc(1);
+		if (!stash)
+			return (NULL);
 		stash[0] = '\0';
 	}
 	buff = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
@@ -84,19 +80,21 @@ char	*get_next_line(int fd)
 	buff[0] = '\0';
 	line = fill_stash(fd, buff, stash);
 	if (!line)
+	{
+		free(buff);
+		free(stash);
 		return (NULL);
+	}
 	stash = extract_line(line);
-	if (!stash)
-		return (NULL);
 	return (line);
 }
 
 // int	main(void)
 // {
-// 	char	*buff;
-// 	int		fd;
+//  	char	*buff;
+//  	int		fd;
 
-// 	fd = open("tests/test.txt", O_RDONLY);
+//  	fd = open("tests/test.txt", O_RDONLY);
 // 	buff = get_next_line(fd);
 // 	while (buff)
 // 	{
@@ -105,5 +103,5 @@ char	*get_next_line(int fd)
 // 		buff = get_next_line(fd);
 // 	}
 // 	printf("%s", buff);
-// 	return (0);
+//  	return (0);
 // }
