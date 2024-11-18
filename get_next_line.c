@@ -6,7 +6,7 @@
 /*   By: thibault <thibault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 12:41:21 by thibault          #+#    #+#             */
-/*   Updated: 2024/11/17 18:15:52 by thibault         ###   ########.fr       */
+/*   Updated: 2024/11/17 18:56:39 by thibault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 char	*fill_stash(int fd, char *buff, char *stash)
 {
 	int		b_reads;
+	char	*tmp;
 
 	b_reads = 1;
 	while(b_reads != 0)
@@ -29,11 +30,23 @@ char	*fill_stash(int fd, char *buff, char *stash)
 		if (b_reads == 0)
 		{
 			if (stash[b_reads] == 0)
+			{
+				free(buff);
+				free(stash);
 				return (NULL);
+			}
 			break ;
 		}
 		buff[b_reads] = 0;
-		stash = ft_strjoin(stash, buff);
+		tmp = ft_strjoin(stash, buff);
+		if (!tmp)
+		{
+			free(buff);
+			free(stash);
+			return (NULL);
+		}
+		free(stash);
+		stash = tmp;
 		if (ft_strchr(buff, '\n'))
 			break ;
 	}
@@ -80,11 +93,7 @@ char	*get_next_line(int fd)
 	buff[0] = '\0';
 	line = fill_stash(fd, buff, stash);
 	if (!line)
-	{
-		free(buff);
-		free(stash);
 		return (NULL);
-	}
 	stash = extract_line(line);
 	return (line);
 }
