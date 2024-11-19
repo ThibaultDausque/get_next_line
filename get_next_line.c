@@ -6,7 +6,7 @@
 /*   By: thibault <thibault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 12:41:21 by thibault          #+#    #+#             */
-/*   Updated: 2024/11/17 18:56:39 by thibault         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:44:52 by thibault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,39 +16,24 @@
 char	*fill_stash(int fd, char *buff, char *stash)
 {
 	int		b_reads;
-	char	*tmp;
 
 	b_reads = 1;
-	while(b_reads != 0)
+	while (b_reads != 0 && !ft_strchr(buff, '\n'))
 	{
 		b_reads = read(fd, buff, BUFFER_SIZE);
-		if (b_reads < 0)
+		if (b_reads == -1 || (b_reads == 0 && stash[0] == 0))
 		{
-			free(buff); 
+			free(stash);
+			free(buff);
 			return (NULL);
-		}
-		if (b_reads == 0)
-		{
-			if (stash[b_reads] == 0)
-			{
-				free(buff);
-				free(stash);
-				return (NULL);
-			}
-			break ;
 		}
 		buff[b_reads] = 0;
-		tmp = ft_strjoin(stash, buff);
-		if (!tmp)
+		stash = ft_strjoin(stash, buff);
+		if (!stash)
 		{
 			free(buff);
-			free(stash);
 			return (NULL);
 		}
-		free(stash);
-		stash = tmp;
-		if (ft_strchr(buff, '\n'))
-			break ;
 	}
 	free(buff);
 	return (stash);
@@ -65,10 +50,11 @@ char	*extract_line(char *line)
 	tmp = ft_substr(line, i + 1, ft_strlen(line));
 	if (!tmp)
 	{
-		free(line);
-		return (NULL);
+		free(tmp);
+		tmp = NULL;
 	}
-	line[i + 1] = 0;
+	if (line[i] == '\n')
+		line[i + 1] = 0;
 	return (tmp);
 }
 
@@ -100,17 +86,17 @@ char	*get_next_line(int fd)
 
 // int	main(void)
 // {
-//  	char	*buff;
-//  	int		fd;
+//   	char	*buff;
+//   	int		fd;
 
-//  	fd = open("tests/test.txt", O_RDONLY);
-// 	buff = get_next_line(fd);
-// 	while (buff)
-// 	{
-// 		printf("%s", buff);
-// 		free(buff);
-// 		buff = get_next_line(fd);
-// 	}
-// 	printf("%s", buff);
-//  	return (0);
+//   	fd = open("tests/test.txt", O_RDONLY);
+//  	buff = get_next_line(fd);
+//  	while (buff)
+//  	{
+//  		printf("%s", buff);
+//  		free(buff);
+//  		buff = get_next_line(fd);
+//  	}
+//  	printf("%s", buff);
+//   	return (0);
 // }
