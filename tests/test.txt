@@ -1,3 +1,0 @@
-hello world
-My name is Thibault
-I am 23

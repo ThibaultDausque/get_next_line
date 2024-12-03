@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thibault <thibault@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tdausque <tdausque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 15:24:15 by tdausque          #+#    #+#             */
-/*   Updated: 2024/11/19 15:36:02 by thibault         ###   ########.fr       */
+/*   Updated: 2024/11/20 10:43:24 by tdausque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	}
 	str[ft_strlen(s1) + i] = '\0';
 	free(s1);
+	s1 = NULL;
 	return (str);
 }
 
